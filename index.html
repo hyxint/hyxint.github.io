@@ -66,18 +66,10 @@
   /* ---------- hero ---------- */
   .hero {
     display: grid;
-    grid-template-columns: 1fr 200px;
+    grid-template-columns: 1fr 120px;
     gap: 48px;
     align-items: center;
   }
-  .bytes {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--muted);
-    margin: 0 0 10px;
-    min-height: 1.4em;
-  }
-  .bytes .on { color: var(--accent); }
   h1 {
     font-weight: 600;
     font-size: clamp(44px, 9vw, 64px);
@@ -85,15 +77,6 @@
     margin: 0 0 22px;
     letter-spacing: -0.03em;
   }
-  h1 .cursor {
-    display: inline-block;
-    width: 0.07em;
-    height: 0.78em;
-    margin-left: 6px;
-    background: var(--accent);
-    animation: blink 1s steps(1) infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
   .lede { font-size: 19px; margin: 0; }
 
   .links {
@@ -117,37 +100,15 @@
   }
   .links a:hover { border-color: var(--accent); }
 
-  /* photo: drop photo.jpg next to this file; monogram shows until then */
   .photo {
-    position: relative;
-    width: 200px;
-    aspect-ratio: 4 / 5;
-    border-radius: 14px;
-    background: var(--accent-soft);
-    box-shadow: var(--shadow);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
     overflow: hidden;
-    transform: rotate(1.5deg);
-  }
-  .photo::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, .08);
-    pointer-events: none;
+    background: var(--accent-soft);
+    box-shadow: 0 0 0 4px var(--surface), 0 0 0 5px var(--rule);
   }
   .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .photo .mono {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    font-family: var(--mono);
-    font-size: 44px;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-  }
-  .photo img + .mono { display: none; }
 
   /* ---------- sections ---------- */
   section { margin-top: 88px; }
@@ -168,7 +129,7 @@
   /* interests */
   .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
   .card {
@@ -201,7 +162,8 @@
     border-left: 2px solid var(--accent);
   }
 
-  /* path */
+
+  /* education */
   .path { list-style: none; margin: 0; padding: 0; position: relative; }
   .path::before {
     content: "";
@@ -283,13 +245,12 @@
     body { font-size: 16px; }
     main { padding-top: 48px; }
     .hero { grid-template-columns: 1fr; gap: 32px; }
-    .photo { width: 140px; order: -1; }
+    .photo { width: 96px; height: 96px; order: -1; }
     .pubs li { grid-template-columns: 1fr; gap: 4px; }
     .pubs .venue-tag { padding-top: 0; }
     section { margin-top: 64px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    h1 .cursor { animation: none; }
     .rise { animation: none; opacity: 1; transform: none; }
     .card { transition: none; }
   }
@@ -299,25 +260,23 @@
 <main>
   <header class="hero">
     <div class="rise">
-      <p class="bytes" id="bytes" aria-hidden="true">59 75 78 69 6e 20 48 75</p>
-      <h1><span id="name">Yuxin Hu</span><span class="cursor" aria-hidden="true"></span></h1>
+      <h1>Yuxin Hu</h1>
       <p class="lede">
-        Ph.D. student in Computer Science at
+        I am a Ph.D. student in Computer Science at
         <a href="https://www.vanderbilt.edu/">Vanderbilt University</a>,
-        advised by <a href="https://kjleach.github.io/">Kevin Leach</a>.
-        I work below the abstraction line, where binaries outlive their source code
-        and hardware keeps secrets from everyone else.
+        advised by Prof. <a href="https://kjleach.github.io/">Kevin Leach</a>,
+        starting from Fall 2023.
+        My research interests lie in AI for decompilation and trusted execution environments (TEEs).
       </p>
       <ul class="links">
-        <li><a href="mailto:yuxin.hu@vanderbilt.edu">yuxin.hu@vanderbilt.edu</a></li>
+        <li><a href="#" id="email" data-u="yuxin.hu" data-d="vanderbilt.edu">yuxin.hu [at] vanderbilt.edu</a></li>
         <!-- <li><a href="https://scholar.google.com/citations?user=XXXX">Scholar</a></li> -->
-        <!-- <li><a href="https://github.com/XXXX">GitHub</a></li> -->
+        <li><a href="https://github.com/hyxint">GitHub</a></li>
         <!-- <li><a href="cv.pdf">CV</a></li> -->
       </ul>
     </div>
     <div class="photo rise">
-      <img src="photo.jpg" alt="Yuxin Hu" onerror="this.remove()">
-      <span class="mono" aria-hidden="true">YH</span>
+      <img src="photo.jpg" alt="Yuxin Hu">
     </div>
   </header>
 
@@ -325,39 +284,32 @@
     <h2>Interests</h2>
     <div class="cards">
       <article class="card">
-        <p class="tag">// ai agents</p>
-        <h3>Agents that read machine code</h3>
-        <p>LLM agents that work with disassemblers, compilers, and debuggers, and that check
-        their own answers instead of guessing.</p>
-      </article>
-      <article class="card">
-        <p class="tag">// decompilation</p>
-        <h3>Code that runs again</h3>
-        <p>Turning binaries back into source that compiles and behaves like the original,
-        not just source that looks plausible.</p>
+        <p class="tag">// ai × decompilation</p>
+        <h3>Decompilation you can execute</h3>
+        <p>Using LLMs and agents to recover source code from binaries that can be
+        recompiled and re-executed.</p>
       </article>
       <article class="card">
         <p class="tag">// tee</p>
-        <h3>Secrets the OS can't see</h3>
-        <p>Trusted execution on Arm CCA, and making strong isolation practical for
-        ordinary applications.</p>
+        <h3>Secrets attackers can't reach</h3>
+        <p>Extending Arm TEEs to protect applications from privileged attackers.</p>
       </article>
     </div>
     <p class="thread">One recovers what a program really does. The other makes sure nobody else can find out.</p>
   </section>
 
   <section>
-    <h2>Path</h2>
+    <h2>Education</h2>
     <ul class="path">
       <li>
         <span class="when">2023 – now</span>
         <span class="where">Vanderbilt University</span><br>
-        <span class="sub">Ph.D. in Computer Science · advised by Kevin Leach</span>
+        <span class="sub">Ph.D. student</span>
       </li>
       <li>
         <span class="when">2020 – 2023</span>
         <span class="where">Southern University of Science and Technology (SUSTech)</span><br>
-        <span class="sub">Research on Arm security and confidential computing</span>
+        <span class="sub">Master's degree</span>
       </li>
       <li>
         <span class="when">2016 – 2020</span>
@@ -406,30 +358,19 @@
   </section>
 
   <footer>
-    <span>Nashville, TN</span>
+    <span>© 2026 Yuxin Hu</span>
     <button class="theme-toggle" id="theme" type="button">◐ theme</button>
   </footer>
 </main>
 
 <script>
-  // Decode the name byte by byte, like a tiny decompiler.
+  // Email is assembled on click so the full address never appears in the source.
   (function () {
-    var target = "Yuxin Hu";
-    var nameEl = document.getElementById("name");
-    var bytesEl = document.getElementById("bytes");
-    var hex = Array.from(target, function (c) { return c.charCodeAt(0).toString(16); });
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    var i = 0;
-    nameEl.textContent = "";
-    var timer = setInterval(function () {
-      i++;
-      nameEl.textContent = target.slice(0, i);
-      bytesEl.innerHTML = hex.map(function (h, j) {
-        return j < i ? '<span class="on">' + h + "</span>" : h;
-      }).join(" ");
-      if (i >= target.length) clearInterval(timer);
-    }, 110);
+    var el = document.getElementById("email");
+    el.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.location.href = "mailto:" + el.dataset.u + "@" + el.dataset.d;
+    });
   })();
 
   // Light/dark toggle, remembered per browser.
