@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yuxin Hu</title>
+<meta name="description" content="Yuxin Hu — Ph.D. student at Vanderbilt University working on AI agents, decompilation, and trusted execution environments.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --fg: #0f172a;
+    --muted: #5b6577;
+    --rule: #e1e6ee;
+    --dot: #dbe1ea;
+    --accent: #2f54eb;
+    --accent-soft: #e6ebff;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px -12px rgba(15, 23, 42, .16);
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b0f17;
+      --surface: #121826;
+      --fg: #e6eaf2;
+      --muted: #8a94a8;
+      --rule: #222b3b;
+      --dot: #1a2131;
+      --accent: #7c9cff;
+      --accent-soft: #1b2445;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0f17;
+    --surface: #121826;
+    --fg: #e6eaf2;
+    --muted: #8a94a8;
+    --rule: #222b3b;
+    --dot: #1a2131;
+    --accent: #7c9cff;
+    --accent-soft: #1b2445;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -12px rgba(0, 0, 0, .7);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  main { max-width: 780px; margin: 0 auto; padding: 80px 16px 96px; }
+  a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; transition: color .15s; }
+  a:hover { color: var(--accent); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 48px;
+    align-items: center;
+  }
+  .bytes {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 10px;
+    min-height: 1.4em;
+  }
+  .bytes .on { color: var(--accent); }
+  h1 {
+    font-weight: 600;
+    font-size: clamp(44px, 9vw, 64px);
+    line-height: 1;
+    margin: 0 0 22px;
+    letter-spacing: -0.03em;
+  }
+  h1 .cursor {
+    display: inline-block;
+    width: 0.07em;
+    height: 0.78em;
+    margin-left: 6px;
+    background: var(--accent);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .lede { font-size: 19px; margin: 0; }
+
+  .links {
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .links a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--surface);
+    transition: border-color .15s, color .15s;
+  }
+  .links a:hover { border-color: var(--accent); }
+
+  /* photo: drop photo.jpg next to this file; monogram shows until then */
+  .photo {
+    position: relative;
+    width: 200px;
+    aspect-ratio: 4 / 5;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transform: rotate(1.5deg);
+  }
+  .photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, .08);
+    pointer-events: none;
+  }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo .mono {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--mono);
+    font-size: 44px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .photo img + .mono { display: none; }
+
+  /* ---------- sections ---------- */
+  section { margin-top: 88px; }
+  h2 {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin: 0 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+
+  /* interests */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 20px 20px 22px;
+    box-shadow: var(--shadow);
+    transition: transform .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .card .tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  .card h3 {
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 10px;
+  }
+  .card p { margin: 0; font-size: 15px; color: var(--muted); }
+  .thread {
+    margin: 28px 0 0;
+    font-style: italic;
+    font-size: 18px;
+    padding-left: 16px;
+    border-left: 2px solid var(--accent);
+  }
+
+  /* path */
+  .path { list-style: none; margin: 0; padding: 0; position: relative; }
+  .path::before {
+    content: "";
+    position: absolute;
+    left: 5px; top: 12px; bottom: 12px;
+    width: 1px;
+    background: var(--rule);
+  }
+  .path li { position: relative; padding: 0 0 22px 32px; }
+  .path li:last-child { padding-bottom: 0; }
+  .path li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 9px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+  .path li:first-child::before { background: var(--accent); }
+  .path .when { font-family: var(--mono); font-size: 13px; color: var(--muted); display: block; }
+  .path .where { font-weight: 500; }
+  .path .sub { color: var(--muted); font-size: 15px; }
+
+  /* publications */
+  .pubs { list-style: none; margin: 0; padding: 0; }
+  .pubs li {
+    display: grid;
+    grid-template-columns: 128px 1fr;
+    gap: 20px;
+    padding: 18px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .pubs li:first-child { border-top: 0; padding-top: 0; }
+  .pubs .venue-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--accent);
+    padding-top: 5px;
+    white-space: nowrap;
+  }
+  .pubs .title { font-weight: 500; display: block; line-height: 1.35; margin-bottom: 4px; }
+  .pubs .authors { color: var(--muted); font-size: 15px; display: block; }
+  .pubs .authors .me { color: var(--fg); font-weight: 600; }
+  .pubs .venue { font-style: italic; font-size: 14px; color: var(--muted); }
+
+  footer {
+    margin-top: 96px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .theme-toggle {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--accent); }
+
+  /* entrance */
+  .rise { opacity: 0; transform: translateY(10px); animation: rise .6s ease forwards; }
+  .rise:nth-child(2) { animation-delay: .1s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  @media (max-width: 720px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    main { padding-top: 48px; }
+    .hero { grid-template-columns: 1fr; gap: 32px; }
+    .photo { width: 140px; order: -1; }
+    .pubs li { grid-template-columns: 1fr; gap: 4px; }
+    .pubs .venue-tag { padding-top: 0; }
+    section { margin-top: 64px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    h1 .cursor { animation: none; }
+    .rise { animation: none; opacity: 1; transform: none; }
+    .card { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div class="rise">
+      <p class="bytes" id="bytes" aria-hidden="true">59 75 78 69 6e 20 48 75</p>
+      <h1><span id="name">Yuxin Hu</span><span class="cursor" aria-hidden="true"></span></h1>
+      <p class="lede">
+        Ph.D. student in Computer Science at
+        <a href="https://www.vanderbilt.edu/">Vanderbilt University</a>,
+        advised by <a href="https://kjleach.github.io/">Kevin Leach</a>.
+        I work below the abstraction line, where binaries outlive their source code
+        and hardware keeps secrets from everyone else.
+      </p>
+      <ul class="links">
+        <li><a href="mailto:yuxin.hu@vanderbilt.edu">yuxin.hu@vanderbilt.edu</a></li>
+        <!-- <li><a href="https://scholar.google.com/citations?user=XXXX">Scholar</a></li> -->
+        <!-- <li><a href="https://github.com/XXXX">GitHub</a></li> -->
+        <!-- <li><a href="cv.pdf">CV</a></li> -->
+      </ul>
+    </div>
+    <div class="photo rise">
+      <img src="photo.jpg" alt="Yuxin Hu" onerror="this.remove()">
+      <span class="mono" aria-hidden="true">YH</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>Interests</h2>
+    <div class="cards">
+      <article class="card">
+        <p class="tag">// ai agents</p>
+        <h3>Agents that read machine code</h3>
+        <p>LLM agents that work with disassemblers, compilers, and debuggers, and that check
+        their own answers instead of guessing.</p>
+      </article>
+      <article class="card">
+        <p class="tag">// decompilation</p>
+        <h3>Code that runs again</h3>
+        <p>Turning binaries back into source that compiles and behaves like the original,
+        not just source that looks plausible.</p>
+      </article>
+      <article class="card">
+        <p class="tag">// tee</p>
+        <h3>Secrets the OS can't see</h3>
+        <p>Trusted execution on Arm CCA, and making strong isolation practical for
+        ordinary applications.</p>
+      </article>
+    </div>
+    <p class="thread">One recovers what a program really does. The other makes sure nobody else can find out.</p>
+  </section>
+
+  <section>
+    <h2>Path</h2>
+    <ul class="path">
+      <li>
+        <span class="when">2023 – now</span>
+        <span class="where">Vanderbilt University</span><br>
+        <span class="sub">Ph.D. in Computer Science · advised by Kevin Leach</span>
+      </li>
+      <li>
+        <span class="when">2020 – 2023</span>
+        <span class="where">Southern University of Science and Technology (SUSTech)</span><br>
+        <span class="sub">Research on Arm security and confidential computing</span>
+      </li>
+      <li>
+        <span class="when">2016 – 2020</span>
+        <span class="where">Nanchang University</span><br>
+        <span class="sub">Bachelor's degree</span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Publications</h2>
+    <ul class="pubs">
+      <li>
+        <span class="venue-tag">EMNLP '26</span>
+        <div>
+          <span class="title">Context-Guided Decompilation: A Step Towards Re-executability</span>
+          <span class="authors">X. Wang, <span class="me">Y. Hu</span>, K. Leach</span>
+          <span class="venue">Findings of the Conference on Empirical Methods in Natural Language Processing (EMNLP), 2026</span>
+        </div>
+      </li>
+      <li>
+        <span class="venue-tag">TDSC '25</span>
+        <div>
+          <span class="title">Complementing Confidential Computing Environment for Applications on Arm CCA</span>
+          <span class="authors">Y. Zhang, <span class="me">Y. Hu</span>, Z. Ning, F. Zhang, X. Luo, H. Huang, S. Yan, Z. He</span>
+          <span class="venue">IEEE Transactions on Dependable and Secure Computing (TDSC), 2025</span>
+        </div>
+      </li>
+      <li>
+        <span class="venue-tag">USENIX Sec '23</span>
+        <div>
+          <span class="title">SHELTER: Extending Arm CCA with Isolation in User Space</span>
+          <span class="authors">Y. Zhang*, <span class="me">Y. Hu*</span>, Z. Ning, F. Zhang, X. Luo, H. Huang, S. Yan, Z. He</span>
+          <span class="venue">USENIX Security Symposium (USENIX Security), 2023</span>
+        </div>
+      </li>
+      <li>
+        <span class="venue-tag">ISSTA '23</span>
+        <div>
+          <span class="title">Alligator in Vest: A Practical Failure-Diagnosis Framework via Arm Hardware Features</span>
+          <span class="authors">Y. Zhang, <span class="me">Y. Hu</span>, H. Li, W. Shi, Z. Ning, X. Luo</span>
+          <span class="venue">ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA), 2023</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Nashville, TN</span>
+    <button class="theme-toggle" id="theme" type="button">◐ theme</button>
+  </footer>
+</main>
+
+<script>
+  // Decode the name byte by byte, like a tiny decompiler.
+  (function () {
+    var target = "Yuxin Hu";
+    var nameEl = document.getElementById("name");
+    var bytesEl = document.getElementById("bytes");
+    var hex = Array.from(target, function (c) { return c.charCodeAt(0).toString(16); });
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var i = 0;
+    nameEl.textContent = "";
+    var timer = setInterval(function () {
+      i++;
+      nameEl.textContent = target.slice(0, i);
+      bytesEl.innerHTML = hex.map(function (h, j) {
+        return j < i ? '<span class="on">' + h + "</span>" : h;
+      }).join(" ");
+      if (i >= target.length) clearInterval(timer);
+    }, 110);
+  })();
+
+  // Light/dark toggle, remembered per browser.
+  (function () {
+    var root = document.documentElement;
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved) root.setAttribute("data-theme", saved);
+    } catch (e) {}
+    document.getElementById("theme").addEventListener("click", function () {
+      var dark = root.getAttribute("data-theme")
+        ? root.getAttribute("data-theme") === "dark"
+        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var next = dark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
